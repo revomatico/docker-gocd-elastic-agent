@@ -6,7 +6,7 @@ cd $(readlink -f ${0%/*})
 
 GO_AGENT_VERSION=21.2.0
 GO_AGENT_VERSION_FULL=${GO_AGENT_VERSION}-12498
-DOCKER_IMAGE="local/gocd-elastic-agent:$GO_AGENT_VERSION"
+DOCKER_IMAGE="local/gocd-elastic-agent:v$GO_AGENT_VERSION"
 
 ## Download agent prereq files
 for f in docker-entrypoint.sh  agent-bootstrapper-logback-include.xml agent-launcher-logback-include.xml agent-logback-include.xml; do
