@@ -7,10 +7,12 @@ LABEL description="GoCD agent based on Ubuntu version 20.04" \
 ADD https://github.com/krallin/tini/releases/download/v0.18.0/tini-static-amd64 /usr/local/sbin/tini
 
 # force encoding
-ENV LANG=en_US.UTF-8 LANGUAGE=en_US:en LC_ALL=en_US.UTF-8
-ENV GO_JAVA_HOME="/gocd-jre"
-ENV GO_AGENT_ZIP=/tmp/go-agent.zip
-ENV DEBIAN_FRONTEND=noninteractive
+ENV LANG=en_US.UTF-8 LANGUAGE=en_US:en LC_ALL=en_US.UTF-8 \
+    GO_JAVA_HOME="/gocd-jre" \
+    GO_AGENT_ZIP=/tmp/go-agent.zip \
+    DEBIAN_FRONTEND=noninteractive \
+    OPENJDK_VERSION=15.0.2_7
+
 
 ARG UID=1000
 ARG GID=1000
@@ -36,7 +38,7 @@ RUN \
   apt-get install -y --no-install-recommends docker-ce-cli libxml2-utils jq python3-pip && \
   apt-get autoclean && \
   echo 'en_US.UTF-8 UTF-8' > /etc/locale.gen && /usr/sbin/locale-gen && \
-  curl --fail --location --silent --show-error 'https://github.com/AdoptOpenJDK/openjdk15-binaries/releases/download/jdk-15.0.2%2B7/OpenJDK15U-jre_x64_linux_hotspot_15.0.2_7.tar.gz' --output /tmp/jre.tar.gz && \
+  curl --fail --location --silent --show-error 'https://github.com/AdoptOpenJDK/openjdk15-binaries/releases/download/jdk-${OPENJDK_VERSION}/OpenJDK15U-jre_x64_linux_hotspot_${OPENJDK_VERSION}.tar.gz' --output /tmp/jre.tar.gz && \
   mkdir -p /gocd-jre && \
   tar -xf /tmp/jre.tar.gz -C /gocd-jre --strip 1 && \
   rm -rf /tmp/jre.tar.gz && \
