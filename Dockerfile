@@ -11,8 +11,8 @@ ENV LANG=en_US.UTF-8 LANGUAGE=en_US:en LC_ALL=en_US.UTF-8 \
     GO_JAVA_HOME="/gocd-jre" \
     GO_AGENT_ZIP=/tmp/go-agent.zip \
     DEBIAN_FRONTEND=noninteractive \
-    OPENJDK_VERSION=15.0.2_7
-
+    OPENJDK_VERSION=15.0.2_7 \
+    GIT_SECRET_VERSION=v0.4.0
 
 ARG UID=1000
 ARG GID=1000
@@ -61,7 +61,19 @@ RUN \
   mv fx-linux /usr/local/bin/fx && \
   rm -vf /tmp/fx-linux.zip && \
   curl --fail --location --silent --show-error https://github.com/mikefarah/yq/releases/download/v4.12.1/yq_linux_amd64 > /usr/local/bin/yq && \
-  chmod +x /usr/local/bin/*
+  chmod +x /usr/local/bin/* && \
+  ## Install git-secret and deps
+  apt-get install -y --no-install-recommends gawk && \
+  git clone https://github.com/sobolevn/git-secret.git && \
+  cd git-secret && \
+  git checkout tags/$GIT_SECRET_VERSION && \
+  cat src/version.sh > git-secret && \
+  cat src/_utils/*.sh src/commands/*.sh >> git-secret && \
+  cat src/main.sh >> git-secret && \
+  chmod +x git-secret && \
+  ./utils/install.sh /usr && \
+  cd - && \
+  rm -fr git-secret
 
 ADD docker-entrypoint.sh /
 
