@@ -37,6 +37,7 @@ RUN \
   apt-get install -y --no-install-recommends docker-ce-cli libxml2-utils jq python3-pip && \
   apt-get autoclean && \
   echo 'en_US.UTF-8 UTF-8' > /etc/locale.gen && /usr/sbin/locale-gen && \
+  curl -sL https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl -o /usr/local/bin/kubectl && \
   curl --fail --location --silent --show-error 'https://github.com/AdoptOpenJDK/openjdk15-binaries/releases/download/jdk-15.0.2%2B7_openj9-0.24.0/OpenJDK15U-jre_x64_linux_openj9_15.0.2_7_openj9-0.24.0.tar.gz' --output /tmp/jre.tar.gz && \
   mkdir -p /gocd-jre && \
   tar -xf /tmp/jre.tar.gz -C /gocd-jre --strip 1 && \
