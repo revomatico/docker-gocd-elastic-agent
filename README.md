@@ -1,6 +1,6 @@
 # Builds docker custom image with gocd-elastic-agent
 
-> Ref: https://github.com/gocd/docker-gocd-agent-ubuntu-18.04
+> Ref: https://github.com/gocd/docker-gocd-agent-ubuntu-22.04
 
 Docker Hub Image: https://hub.docker.com/repository/docker/revomatico/gocd-elastic-agent/tags?page=1&ordering=last_updated
 

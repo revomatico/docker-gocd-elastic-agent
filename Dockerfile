@@ -1,13 +1,14 @@
-FROM ubuntu:20.04
+FROM ubuntu:22.04
 
-LABEL description="GoCD agent based on Ubuntu version 20.04" \
+LABEL description="GoCD agent based on Ubuntu version 22.04" \
   maintainer="Revomatico <infra@revomatico.com>" \
   url="https://www.gocd.org"
 
-ADD https://github.com/krallin/tini/releases/download/v0.18.0/tini-static-amd64 /usr/local/sbin/tini
+ADD https://github.com/krallin/tini/releases/download/v0.19.0/tini-static-amd64 /usr/local/sbin/tini
 
 # force encoding
-ENV LANG=en_US.UTF-8 LANGUAGE=en_US:en LC_ALL=en_US.UTF-8 \
+ENV LANG=en_US.UTF-8 \
+    LANGUAGE=en_US:en LC_ALL=en_US.UTF-8 \
     GO_JAVA_HOME="/gocd-jre" \
     GO_AGENT_ZIP=/tmp/go-agent.zip \
     DEBIAN_FRONTEND=noninteractive \
@@ -38,7 +39,7 @@ RUN \
   apt-get autoclean && \
   echo 'en_US.UTF-8 UTF-8' > /etc/locale.gen && /usr/sbin/locale-gen && \
   curl -sL https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl -o /usr/local/bin/kubectl && \
-  curl --fail --location --silent --show-error 'https://github.com/AdoptOpenJDK/openjdk15-binaries/releases/download/jdk-15.0.2%2B7_openj9-0.24.0/OpenJDK15U-jre_x64_linux_openj9_15.0.2_7_openj9-0.24.0.tar.gz' --output /tmp/jre.tar.gz && \
+  curl --fail --location --silent --show-error 'https://github.com/adoptium/temurin16-binaries/releases/download/jdk-16.0.2%2B7/OpenJDK16U-jdk_x64_linux_hotspot_16.0.2_7.tar.gz' --output /tmp/jre.tar.gz && \
   mkdir -p /gocd-jre && \
   tar -xf /tmp/jre.tar.gz -C /gocd-jre --strip 1 && \
   rm -rf /tmp/jre.tar.gz && \
@@ -60,7 +61,7 @@ RUN \
   unzip /tmp/fx-linux.zip fx-linux && \
   mv fx-linux /usr/local/bin/fx && \
   rm -vf /tmp/fx-linux.zip && \
-  curl --fail --location --silent --show-error https://github.com/mikefarah/yq/releases/download/v4.12.1/yq_linux_amd64 > /usr/local/bin/yq && \
+  curl --fail --location --silent --show-error https://github.com/mikefarah/yq/releases/download/v4.30.8/yq_linux_amd64 > /usr/local/bin/yq && \
   chmod +x /usr/local/bin/* && \
   ## Install git-secret and deps
   apt-get install -y --no-install-recommends gawk && \

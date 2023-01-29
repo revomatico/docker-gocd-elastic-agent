@@ -4,13 +4,13 @@ set -o pipefail -e -u -x
 
 cd $(readlink -f ${0%/*})
 
-GO_AGENT_VERSION=22.1.0
-GO_AGENT_VERSION_FULL=${GO_AGENT_VERSION}-13913
+GO_AGENT_VERSION=22.3.0
+GO_AGENT_VERSION_FULL=${GO_AGENT_VERSION}-15301
 DOCKER_IMAGE="local/gocd-elastic-agent:v$GO_AGENT_VERSION"
 
 ## Download agent prereq files
-for f in docker-entrypoint.sh  agent-bootstrapper-logback-include.xml agent-launcher-logback-include.xml agent-logback-include.xml; do
-  [[ -f "$f" ]] || curl -sSL https://raw.githubusercontent.com/gocd/docker-gocd-agent-ubuntu-20.04/master/$f > $f
+for f in docker-entrypoint.sh agent-bootstrapper-logback-include.xml agent-launcher-logback-include.xml agent-logback-include.xml; do
+  [[ -f "$f" ]] || curl -sSL https://raw.githubusercontent.com/gocd/docker-gocd-agent-ubuntu-22.04/master/$f > $f
   [[ "${f##*.}" == "sh" && ! -x "$f" ]] && chmod +x "$f"
 done
 
