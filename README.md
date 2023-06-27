@@ -2,7 +2,7 @@
 
 > Ref: <https://github.com/gocd/docker-gocd-agent-ubuntu-22.04>
 
-Docker Hub Image: <https://hub.docker.com/repository/docker/revomatico/gocd-elastic-agent/tags?page=1&ordering=last_updated>
+Docker Hub Image: <https://hub.docker.com/r/revomatico/gocd-elastic-agent/tags?page=1&ordering=last_updated>
 
 ## Additions
 
