@@ -12,7 +12,10 @@ ENV LANG=en_US.UTF-8 \
     GO_JAVA_HOME="/gocd-jre" \
     GO_AGENT_ZIP=/tmp/go-agent.zip \
     DEBIAN_FRONTEND=noninteractive \
-    GIT_SECRET_VERSION=v0.4.0
+    YQ_VERSION=v4.34.1 \
+    FX_VERSION=24.1.0 \
+    NERDCTL_VERSION=1.4.0 \
+    BUILDKIT_VERSION=v0.11.6
 
 ARG UID=1000
 ARG GID=1000
@@ -31,11 +34,8 @@ RUN \
   ## Handle TZData non interactive installl
   ln -fs /usr/share/zoneinfo/Europe/Bucharest /etc/localtime && \
   apt-get install -y --no-install-recommends software-properties-common gnupg ca-certificates git openssh-client bash unzip curl locales procps sysvinit-utils coreutils && \
-  ## Add docker repo
-  curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add - && \
-  add-apt-repository -y "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" && \
   ## Install additional packages
-  apt-get install -y --no-install-recommends docker-ce-cli libxml2-utils jq python3-pip && \
+  apt-get install -y --no-install-recommends libxml2-utils jq && \
   apt-get autoclean && \
   echo 'en_US.UTF-8 UTF-8' > /etc/locale.gen && /usr/sbin/locale-gen && \
   curl -sL https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl -o /usr/local/bin/kubectl && \
@@ -51,30 +51,21 @@ RUN \
   mv /go-agent-* /go-agent && \
   chown -R ${UID}:0 /go-agent && \
   chmod -R g=u /go-agent && \
-  ## Install ansible and deps
-  pip3 install -U setuptools setuptools_rust && \
-  pip3 install -U wheel && \
-  pip3 install -U 'ansible==2.9.25' && \
-  pip3 install --force-reinstall 'Jinja2==2.11.3' && \
   ## Download additional tools
-  curl --fail --location --silent --show-error https://github.com/antonmedv/fx/releases/download/20.0.2/fx-linux.zip > /tmp/fx-linux.zip && \
-  unzip /tmp/fx-linux.zip fx-linux && \
-  mv fx-linux /usr/local/bin/fx && \
-  rm -vf /tmp/fx-linux.zip && \
-  curl --fail --location --silent --show-error https://github.com/mikefarah/yq/releases/download/v4.30.8/yq_linux_amd64 > /usr/local/bin/yq && \
-  chmod +x /usr/local/bin/* && \
-  ## Install git-secret and deps
-  apt-get install -y --no-install-recommends gawk && \
-  git clone https://github.com/sobolevn/git-secret.git && \
-  cd git-secret && \
-  git checkout tags/$GIT_SECRET_VERSION && \
-  cat src/version.sh > git-secret && \
-  cat src/_utils/*.sh src/commands/*.sh >> git-secret && \
-  cat src/main.sh >> git-secret && \
-  chmod +x git-secret && \
-  ./utils/install.sh /usr && \
-  cd - && \
-  rm -fr git-secret
+  set -x && \
+  ## fx
+  curl --fail --location --silent --show-error https://github.com/antonmedv/fx/releases/download/$FX_VERSION/fx_linux_arm64 > /usr/local/bin/fx && \
+  ## yq
+  curl --fail --location --silent --show-error https://github.com/mikefarah/yq/releases/download/$YQ_VERSION/yq_linux_amd64 > /usr/local/bin/yq && \
+  ## nerdctl
+  curl --fail --location --silent --show-error https://github.com//containerd/nerdctl/releases/download/v$NERDCTL_VERSION/nerdctl-$NERDCTL_VERSION-linux-amd64.tar.gz | \
+    tar -C /usr/local/bin --strip-components 0 --wildcards -xzvf - && \
+    ln -s /usr/local/bin/nerdctl /usr/local/bin/docker && \
+  ## buildkit
+  curl --fail --location --silent --show-error https://github.com/moby/buildkit/releases/download/$BUILDKIT_VERSION/buildkit-${BUILDKIT_VERSION}.linux-amd64.tar.gz | \
+    tar -C /usr/local/bin --strip-components 1 --wildcards -xzvf - '*/buildctl' && \
+  chmod +x /usr/local/bin/*
+
 
 ADD docker-entrypoint.sh /
 
