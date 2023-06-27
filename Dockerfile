@@ -33,7 +33,7 @@ RUN \
   apt-get update && \
   ## Handle TZData non interactive installl
   ln -fs /usr/share/zoneinfo/Europe/Bucharest /etc/localtime && \
-  apt-get install -y --no-install-recommends software-properties-common gnupg ca-certificates git openssh-client bash unzip curl locales procps sysvinit-utils coreutils && \
+  apt-get install -y --no-install-recommends software-properties-common gnupg ca-certificates git openssh-client bash unzip curl locales procps sysvinit-utils coreutils sudo && \
   ## Install additional packages
   apt-get install -y --no-install-recommends libxml2-utils jq && \
   apt-get autoclean && \
@@ -63,8 +63,11 @@ RUN \
     ln -s /usr/local/bin/nerdctl /usr/local/bin/docker && \
   ## buildkit
   curl --fail --location --silent --show-error https://github.com/moby/buildkit/releases/download/$BUILDKIT_VERSION/buildkit-${BUILDKIT_VERSION}.linux-amd64.tar.gz | \
-    tar -C /usr/local/bin --strip-components 1 --wildcards -xzvf - '*/buildctl' && \
-  chmod +x /usr/local/bin/*
+    tar -C /usr/local/bin --strip-components 1 --wildcards -xzvf - '*/build*' && \
+    rm -f /usr/local/bin/buildkit-qemu* && \
+  chmod +x /usr/local/bin/* && \
+  ## Add go to sudoers
+  echo "go ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/go
 
 
 ADD docker-entrypoint.sh /

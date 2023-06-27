@@ -160,4 +160,4 @@ if [ "$1" = "${AGENT_WORK_DIR}/bin/go-agent" ]; then
   echo "set.AGENT_STARTUP_ARGS=%AGENT_STARTUP_ARGS% -Dgo.console.stdout=true %GOCD_AGENT_JVM_OPTS%" >> /go-agent/wrapper-config/wrapper-properties.conf
 fi
 
-try exec /usr/local/sbin/tini -g -- "$@"
+try exec /usr/local/sbin/tini -g -- bash -c "sudo buildkitd& $*"

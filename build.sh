@@ -15,6 +15,7 @@ for f in docker-entrypoint.sh agent-bootstrapper-logback-include.xml agent-launc
 done
 
 docker build \
+    --no-cache \
     --build-arg GO_AGENT_VERSION=$GO_AGENT_VERSION \
     --build-arg GO_AGENT_VERSION_FULL=$GO_AGENT_VERSION_FULL \
     -t $DOCKER_IMAGE \
