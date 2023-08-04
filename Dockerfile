@@ -12,10 +12,10 @@ ENV LANG=en_US.UTF-8 \
     GO_JAVA_HOME="/gocd-jre" \
     GO_AGENT_ZIP=/tmp/go-agent.zip \
     DEBIAN_FRONTEND=noninteractive \
-    YQ_VERSION=v4.34.1 \
+    YQ_VERSION=v4.34.2 \
     FX_VERSION=24.1.0 \
-    NERDCTL_VERSION=1.4.0 \
-    BUILDKIT_VERSION=v0.11.6
+    NERDCTL_VERSION=1.5.0 \
+    BUILDKIT_VERSION=v0.12.1
 
 ARG UID=1000
 ARG GID=1000
@@ -23,6 +23,7 @@ ARG GO_AGENT_VERSION
 ARG GO_AGENT_VERSION_FULL
 
 RUN \
+  set -x && \
 # add mode and permissions for files we added above
   chmod 0755 /usr/local/sbin/tini && \
   chown root:root /usr/local/sbin/tini && \

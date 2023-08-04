@@ -4,6 +4,10 @@
 
 Docker Hub Image: <https://hub.docker.com/r/revomatico/gocd-elastic-agent/tags?page=1&ordering=last_updated>
 
+## Base GOCD Agent
+
+- https://www.gocd.org/download/#zip
+
 ## Additions
 
 - [nerdctl](https://github.com/containerd/nerdctl)

@@ -4,9 +4,9 @@ set -o pipefail -e -u -x
 
 cd $(readlink -f ${0%/*})
 
-GO_AGENT_VERSION=22.3.0
-GO_AGENT_VERSION_FULL=${GO_AGENT_VERSION}-15301
-DOCKER_IMAGE="local/gocd-elastic-agent:v${GO_AGENT_VERSION}-2"
+GO_AGENT_VERSION=23.3.0
+GO_AGENT_VERSION_FULL=${GO_AGENT_VERSION}-16991
+DOCKER_IMAGE="local/gocd-elastic-agent:v${GO_AGENT_VERSION}-1"
 
 ## Download agent prereq files
 for f in docker-entrypoint.sh agent-bootstrapper-logback-include.xml agent-launcher-logback-include.xml agent-logback-include.xml; do
